@@ -1,0 +1,180 @@
+Let's start our discussion about text processing by taking a
+look at sentiment analysis. This is actually quite a
+common task in the real world, especially for
+businesses that are selling products or
+for marketing firms, or even for celebrities. The idea is to monitor
+user-contributed feedback and comments on whatever
+your particular item of interest is, often a product. You might be monitoring
+Twitter or Tiktok. You might be looking
+at product reviews, checking in on Reddit,
+whatever it is, the goal is to identify
+what it is that people are saying and whether it's
+positive or negative. Of course, if it's negative, then you might want to
+consider if it's a product, maybe there's some
+fix to be made, or maybe you need to do extra
+advertising or publicity. Somehow or other, you typically want to respond to negative perception and
+negative experiences if you can as soon as possible. Now, it's actually incredibly hard to understand
+arbitrary text, especially with abbreviations
+and vernacular. But fortunately, sentiment
+analysis usually can be done pretty effectively
+without actually fully understanding the text. We'll talk a little bit about how people try to
+do that in a bit. Let me start with just
+a couple of examples of where we might want to
+do sentiment analysis. Here are a couple of screenshots of different tools that have been used to identify product reviews and
+product sentiment. On the left, we have an example of a product review site where users might give
+different numbers of stars to a given product. But additionally, they
+typically will give various comments and
+it's incredibly useful to be able to have some summary
+of the different features that are discussed commonly and the sentiment associated
+with each of them. This is one example where
+sentiment analysis and an understanding of the
+commonly referred to aspects or features
+is incredibly useful. On the right, we have here
+something called IBM's Tone Analyzer and this is essentially monitoring
+on social media. In this case, tweets, the comments that are made
+about individual items. Here we're talking about tweets referring to a
+particular cell phone. In some settings, we can also essentially flip things around. For positive reviews, what are the most
+common terms used? Here's an example word cloud
+by my colleague Lyle Ungar, who was looking at
+Yelp reviews of hospitals to see what are
+the terms that people generally associate
+with positive reviews and you'll see lots of very
+common terms like friendly, great, very, helpful,
+caring, nice. All of these things are obviously descriptive
+of positive reviews. Conversely, we can look at negative reviews and you
+see words like worst, and rude, not, avoid, unprofessional,
+and horrible. We've seen a couple
+of examples of how sentiment analysis
+is used in practice. Of course, the
+second question is, how does it actually
+work under the covers? There's really no one
+solution to that, rather, there are a variety
+of different techniques. But let me give an example of one service that you
+can invoke on the web. Basically, under the covers, what it does is
+it takes the text and tries to parse
+it into sentences, and then match each
+sentence one at a time to figure out
+if it's subjective, therefore has an
+opinion or objective, then whether it's
+positive, negative, or neutral and optionally, it can try to figure out
+what's being discussed, the subject, and who
+actually holds the opinion. How does it do all of this? Well, generally
+there are a set of pattern matching rules which
+have been established by training a machine
+learning system to associate individual
+patterns with positive, negative, or a
+neutral sentiment. Finally, after each
+sentence is scored, These are combined into
+one overall sentiment. We're not going to build our own sentiment analysis tools, that's not really the focus
+of our big data course, but we'll refer
+you to CIS 530 for more information on
+that and we will make use of some
+sentiment analysis tools, both early on and later when we talk about neural networks. Perhaps the simplest
+way of doing sentiment analysis is
+simply to learn lists of positive and negative words and simply pattern match our
+sentences against those. Here are some examples from a series of resources
+available on GitHub where someone trained
+a set of algorithms to identify words that are commonly associated with
+positive sentiment. This is words like acclaim or abundance or accolade
+versus negative sentiment, words like abominable and abraded and abnormal, and so on. There's more detail on the specific technique in
+this particular paper. This is one of many
+different techniques that can be used to identify
+positive and negative words. That's the simplest form. You just sum up the sentiments associated with each of
+the individual words. Perhaps not just whether it is positive or negative,
+but actually a string. Let's take an example
+of how we might actually use this
+sentiment analysis. For our example in
+our sample notebook, we're going to take a dataset of product reviews that
+was published on Kaggle and we want
+to go through for each product and figure out what the average sentiment
+is for each. In other words, what the
+average score would be. To do this, we start off by reading the data file
+which we have hosted on AWS and what you'll
+get out of that is a series of different entries
+for particular products. We are going to filter the category to specifically
+reference food. You'll get things
+like the brand, the specific categories the
+product is associated with , an actual review, which can be very
+short or very long, and a variety of other
+fields that we don't have the space to show here. But generally,
+you'll have a brand and a product and
+a product number, as well as the review. Obviously, just
+taking the reviews isn't going to be
+nearly as effective in summarizing overall
+things as figuring out some sentiment score for each review and then
+doing some aggregation. To do this, let's
+take a look at using one of many libraries for
+this, it's called AFINN. There's a paper on it in the Semantic Web
+Conference and it's available on GitHub
+and by pip install. Quite convenient for us. Basically, what
+we're going to do is take our dataframe of reviews, specifically pull
+out the series, fits the text to the reviews, and we're going to
+call AFINN score on each of the reviews. It will in turn return
+a numeric value, which we put in the score field. If we take a look at
+the dataframe below, we'll see the results. As an example, here's
+a Lundberg product with two reviews. This one mentions good flavor, the second one also
+mentions good flavor. Both of these received
+a score of 3.0. Heinz Ketchup here is at least scored as being
+completely neutral. We finally have Kind
+Fruit & Nut Bars, which get a 2.0. Although, I must say,
+if you look at it, at the initial part, as a human, it's not clear that something that starts with buyer beware, these tastes like 55, is a very encouraging
+positive sentiment. Perhaps this score
+actually ought to be a bit more negative than this
+particular algorithm is giving. But nonetheless, you
+have to go with what the algorithm gives you and
+that's the score that we get. If we look more
+broadly at the set of output values by calling
+the describe function, we'll see that the worst score has negative sentiment of 10, the high score has a
+positive sentiment of 37, and the mean is actually
+quite positive, it's 4.2. Now, what is the spectrum
+or the scale these are on? Well, essentially that's
+somewhat arbitrary. This is what the AFINN library defines as positive
+and negative. Essentially, what
+it's really doing is summing up individual
+scores of words. You can get something that's
+very large or very small. In some cases, it may
+make sense to scale this, for example, based on the
+length of the reviews. But nonetheless, this is essentially what we
+get out of the tool. We can adjust it, but it will typically
+tell us whether something is positively or
+negatively perceived. If we actually take
+a look at the data, then we can do something
+like a groupby on all the terms that refer
+to the individual products. Here, I'm going to say the manufacturer or the
+name and the number. I'm going to group on those, that will actually
+make them into an index in a pandas dataframe, as we see here, because all of these
+are in boldface. Then we will create the mean
+on the remaining attribute, which is the score. We see over here
+the score column, we've now grouped by
+each individual item. We've now computed the average
+of the score for that. Then finally, here we're saying, sort values by score
+and we'll get something from the worst reviewed to
+the best reviewed score. Now, I should note that there
+is a ellipsis mark here. It isn't really the case that we end at a neutral
+sentiment of zero, rather we go all
+the way up to 37. But this first excerpt shows
+you what's on the low end of the scale for these
+product reviews. Essentially, what
+we're saying here is in this particular dataset, Horizon Unsalted Butter receives the most negative sentiment, with Ortega Salsa being second. This gives us a way
+then of ranking either by positive or
+negative sentiment our data. It also gives us a
+way of getting at a bird's eye view, the
+overall sentiment. This can be incredibly useful for a lot of different settings, especially if star ratings
+themselves are not available. That's a very quick look
+at sentiment analysis. Of course, it can be useful in a variety of different settings. Of course, there are
+many other tools, some of which might
+be more sophisticated than the ones that we
+just took a look at, but they all do roughly
+the same thing. They're looking for words or phrases that connote positive, neutral, or negative sentiment. They can be as simple as simply matching words and
+scores or they could be much more sophisticated
+in how they actually parse and handle the
+individual phrases. You can use such tools
+quite directly over data in a dataframe by just applying them over
+individual columns. Then you can get a
+score for each row. You can aggregate, you can sort, you can graph, all sorts of things to actually analyze and understand
+the overall sentiments. Of course, this can be done over live streaming data
+as well as over snapshots of data as they've
+been collected in the past. That's a brief overview
+of sentiment analysis. Next, we're going to look
+at more sophisticated uses of text processing to do
+information extraction.

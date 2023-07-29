@@ -1,0 +1,177 @@
+Let's take a look at how
+we can take our text and figure out what entities are inside of it. So we're generally talking
+about information extraction, which ought to be familiar to you because
+we did a form of I e previously, when we were looking at structured html and
+pulling dates out of Wikipedia info boxes. Now, that particular version of
+the problem was reasonably straightforward because we had HTML tags to tell
+us what the dates were for here. What we actually have to do is take
+the text, parse it into sentences, figure out what is actually being
+referred to in the sentences and then try to extract out
+the appropriate pieces. So this is a much more
+complicated problem. And in fact, through the rest of today,
+we're going to look at it in a couple of different stages right now we're going
+to focus especially on how we get out the entities, basically the now ones that
+are being talked about within sentences. So the basic problem for
+information extraction or IE. Over text data or natural language
+processing data is that we're going to take a series of sentences or
+perhaps tweets and we're going to ideally from those
+output a series of data frames which might have properties or fields and
+might have specific values in them. And hopefully out of that will be
+able to figure out an instance for each row but
+actually can be meaningfully populated. So what does this actually involved? Well, essentially for each sentence or
+each paragraph for each document, we're trying to extract what
+is going on in the sentence. So the noun or the entities and
+the relationships between them. There are actually two forms
+of IE that people talk about. There's so called standard information
+extraction where you know in advance what you're trying to populate. So maybe we have a notion
+of a product data frame. We're trying to figure out the individual
+products and their prices for their products and their sentiment
+as we talked about before or various other things like that. Or maybe it is CEOs and
+their relationship to companies. Another version of this is called open
+information extraction where you have an algorithm that's going out and
+learning from various facts. So as an example, maybe trying to figure
+out all of the concepts that ought to be used from Wikipedia. In open IE we don't necessarily know in
+advance all of the relationship types and all the entity types. And it's up to our tool to actually figure
+out what to introduce as new concepts and new entities. And the open IE problem is much harder. It's generally in the research
+domain as opposed to the usable in production tools domain. So we're going to mostly focus
+on standard IE in this class. Now how do we actually do
+information extraction? Well, there's a typical pipeline. This could in fact be done using
+something like an ETL system as we talked about before r it
+could be a python notebook. So some examples of the tasks involved
+in this typical pipeline would be taking text again, maybe in
+sentences or tweets, tokenizing it, determining the boundaries for
+individual terms and sentences, figuring out the parts of speech. What are the nouns? What are the propositions? What are the verbs? What are the adjectives and generally
+building parse trees out of all of that. Then, once you have the parse tree, you might be able to figure out
+what the subjects and objects are. So, actually identifying
+the named entities. And then finally, and we're going to talk
+about this in the next couple of segments, we might want to do what's called
+co reference resolution, which is to figure out when we're talking about
+the same entity in multiple sentences and perhaps also even in our structured
+database of known entities. So you can think of this as a version
+actually of the entity matching or record linking problem. And then there is a general problem
+of extracting the entities and the relationships between. Again, we'll talk about this
+in a later segment today. With respect to the raw text. It can come from lots of different
+places that all we're going to have different characteristics. Generally speaking, if you have HTML maybe
+without all of the template type tags that we had for Wikipedia, then you're
+going to get very long paragraphs and perhaps a very long document
+that you have to process. Generally speaking, HTML documents
+tend to mostly have grammatical, relatively well formed sentences and
+words. On the other hand,
+if you look at tweet streams or SMS, people tend to use vernacular
+people tend to use abbreviations. People tend to use numbers
+instead of words etc. So you have to handle that
+a little bit differently. We've also got voice transcriptions which
+have their own series of challenges because speech is being converted
+by some algorithm into text. If you've been watching any of
+the closed captions for our videos, you'll know that sometimes
+strange things get inserted. So obviously if you are just parsing
+the output of such an algorithm, it may or may not work exactly
+the way that was expected. There are other sources PDFs which
+should look somewhat like HTML captions on images, which probably look like a slightly more
+grammatical version of the tweet stream. Product reviews. The list can go on and on. But generally speaking, you're going
+to have some kind of parsing tool that tries to handle all of these things. And perhaps along the way, you might also
+have the story and approximate matching and other things so that misspelled
+words or abbreviations or vernacular can be turned into something that
+actually parses in a more meaningful way. And of course I've talked about all of
+this assuming that we have one language. Of course, if you really want to handle
+what's on the web, you may also want to look at other languages or
+translations between them and the like. Okay, so where would you get started in
+trying to do natural language processing? Well, a natural place to start. No pun intended is to use the nltk,
+which is a very popular natural language processing tool kit that has
+a variety of different modules in it. You can just pip,
+install it on normal jupiter and you can actually assume that it's
+already pre installed on collab. You import it, download a series
+of modules that are useful and start to use them. As an example Google has a very nice tool
+for natural language processing on the web called syntax net that was
+trained using deep learning. So how can you use nltk? Well, you can both use its tools and it's built in data sets in case you
+want to experiment with things. Will note that there are a bunch
+of built in data sets in nltk for tweets with positive and
+negative sentiment. We are going to use nltk directly
+on our own supply sentences just to give you a little bit of a feel for
+what it does. So if we want to use nltk directly over
+our own text, we can start with the text. So for our example, we are going to take a paragraph
+from a particular blog post which essentially was expressing skepticism
+about the field of data science. But whatever our paragraph is,
+we can take it, pull it from the web and
+then feed it into nltk, so the simplest thing to do is to take the
+paragraph and tokenize it into sentences. If we do this,
+we would expect to see that there will be a list of sentences and
+indeed that's what we get. Each sentence here ends with a period and
+a line break. And we can see that there are six separate
+sentences that nltk identifies in our text. So that's great. The next step is of course to
+go from sentences to words. So maybe we will iterate
+over each sentence and now tokenize the words for
+each word we can actually regularize it. For example converting it to lower case. Now, for this particular example, what
+we're going to do is also test if the word is purely alphabetic if so we change its
+case to lowercase otherwise we leave it. We will get something like this and you'll see that each sentence ends
+up with its own list of words. So data science is a misnomer science
+in general is a set of methods for learning about the world and so on. This looks quite reasonable. It's not actually in this case having
+to do a huge amount of work because our the limiters between words
+are going to be spaces and periods. But in more elaborate cases you may have
+various kinds of punctuation that actually have to be parsed very carefully. So this process has already gotten us to
+the point where we can just look at words. The more interesting things will start to
+happen when we're trying to understand what the words are doing
+within a sentence. And here we want to know parts of speech. So there is something called part of
+speech tagging our pos tag [SOUND] And pos tag associates with every single word, the part of speech to
+which it is associated. So NN means noun and the S end basically
+is saying that it is a plural. So data is in fact plural of datum, although today we tend to
+use it interchangeably. We see in the next word. Science is a noun A is
+some kind of determinant. This number is a noun and so on. So basically what we get here
+is instead of a list of words, we get a list of pairs with the word and
+they're part of speech. So that's great. Just from this, we can figure out
+what the nouns are more generally, if we're looking for named entities. So important now, like people, places and
+organizations, then we can take this basic sequence of words and their parts
+of speech and try to find patterns over them the same way that we used X path
+to match over XML or HTML structure. So there are of course many
+different methods for doing this. Perhaps the most common is to
+use some kind of templates or regular expression patterns. So, as I had given an example, maybe it's a sequence of
+adjectives followed by amount. Or maybe instead we look up the words
+in some dictionary of known entities or in the more elaborate cases, we actually train a machine learning
+model to look for certain sequences. So the example here is some kind
+of machine learning model that predicts the probability that
+some token X is a person based on where the X is in some list of names and
+X is preceded by the prefix smears. And that there is some word
+after X that has single letters that are in some list of names and
+so on. So basically this pattern is
+something that is learned and give some kind of prediction
+about the probability that X is a person given a set of rules or
+patterns like this. We can actually start to classify
+all sorts of different words simply by running over text. And so here are some examples of
+named entities that are extractable by the nltk with its various
+named entity resolution routines. So some organizations are Georgia,
+Pacific or the World Health Organization. The date is juke or
+a date is 2018 06, 29 money, 175 million Canadian dollars and so on. And you can see for many of these things
+it's actually quite an elaborate series of words or characters that specifies
+the actual entity that we're pulling out. So let's take a look at some simple ways
+that we can find at least candidate named entities. Perhaps the simplest thing to do
+is to take our sentence sparser, break things into words
+through the word tokenizer and then run nltk named Eddie
+chunk over parts of speech. So for example, here we might be able to
+figure out from the named entity Juncker in L T K that are subject here is data and
+the second sentence is about science. So these are a couple of simple examples
+where it takes the parse tree and the parts of speech and
+identifies what the main entities are. We can also do our own manual parsing for
+named entities. Here's an example of that that
+uses regular expressions. So up here we have a pattern
+that we're looking for. We're going to say a noun phrase
+is an optional determinant, which is what the question mark specifies, followed by zero or
+more quantities or adjectives. Followed by one or more now,
+ones that may be plural or capitalized. So here's an example sentence about
+the sesame street characters, Bert and Ernie, which incidentally also
+happened to be the names of techniques from natural language processing today. So we're going to take a regular
+expression parser using this pattern and match with these regular expressions
+over the parts of speech. So, essentially what we're going
+to do is look at the nouns, adjectives and so on and try to form
+them directly into noun phrases that might be a candidate entities. So here is the result of that and
+what you'll see over here, here's a noun phrase for Bert. Here's one for Ernie. There's also two Muppets. There are also numerous skits,
+the popular children television show,
+the United States and Sesame Street. So all of those could be phrases
+representing specific entities. Okay, so that's a simple overview of
+some of the techniques in information extraction. We saw that we can use natural language
+processing software to tokenize and parse words into parts of speech. And from that, we can either use, built in
+machine learning model based techniques or a regular expression pattern matching, or look up in a dictionary to try to figure
+out which entities are being talked about. Of course, to this point, we're only
+talking about individual entities, not what's happening to them. So in the next segment, we're first going
+to figure out when multiple names or multiple phrases referring
+to the same entity. And then after that, we're going to try to figure out
+relationships among the entities.

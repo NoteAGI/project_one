@@ -1,0 +1,43 @@
+To this point, we mostly focused on
+data that has some structure to it. But of course we all know that
+a huge amount of opinions and not only did experience are encoded
+not in structured form but in text. So whether we're talking about books or
+we're talking about blood posts or tweets, there's a huge amount of information to
+be gained from somehow processing text. Of course as we do that, we have to deal
+with all sorts of challenges, including different kinds of style, Different
+languages and so on and so forth. So today we're going to talk about
+how we can actually handle and learn from text data. So as we talk about analyzing text data,
+you might be wondering what makes regular text data different from
+structured text data. And the answer is actually
+pretty straightforward. To this point even when we looked at html
+documents like in Wikipedia to extract out textual information,
+there were tags and deal emitters that allowed us to figure
+out what it was that we were looking for. Now we're really talking about text
+data from tweets and blog posts and entire documents where we might have to
+analyze the structure of the text itself to figure out what it is that
+we're actually referring to. What it is that we actually want. Examples of this would be web pages, the actual narrative passages from
+Wikipedia, email or text messaging or Twitter or Facebook increasingly videos
+with comments on them or captions. Newswires and blogs and
+of course product descriptions and reviews end up being incredibly insightful
+for certain application domains. So all of this is the kind of
+stuff that we'd like to handle. And of course as we do this
+across the scale of the Internet, we should also realize that we may have to
+do this in many different languages and using many different
+character sets as well. So for many years text data was extremely
+difficult to address in a scalable way, but there's actually been a lot of
+progress over the past five to eight, maybe even ten years. With giant data sets used by different
+communities and by the big web providers, different deep learning techniques,
+new models for word embeddings and generally speaking more scalable
+processing and compute platforms. And all of this has led to better
+techniques for parsing and understanding what's
+going on in sentences. So we'll talk a little
+bit about some of these, although this is of course not
+natural language processing course and we would refer you to CIS 530 for
+more information. The road map for today is that we're going to try to give
+an overview of some of the approaches and some of the tools that might be useful for
+doing big data analytics over text. So we'll start with a discussion of
+sentiment analysis, which is trying to give a sense of whether things
+are viewed positively or negatively. We'll talk about
+information extraction and some various tools there, entities and
+relationships and some of the ongoing challenges that natural language
+processing faces as we look forward.

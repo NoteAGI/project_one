@@ -1,0 +1,6 @@
+Flask
+faiss-cpu
+openai
+Flask-CORS
+langchain
+llama_index

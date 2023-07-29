@@ -1,0 +1,47 @@
+.message {
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 8px;
+    width: fit-content;
+    max-width: 70%;
+  }
+  
+  .message-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+  }
+  
+  .message.user {
+    background-color: #0b93f6;
+    color: white;
+    margin-left: auto;
+  }
+  
+  .message.bot {
+    background-color: #f1f0f0;
+    color: black;
+  }
+  
+  .message-transition-enter {
+    opacity: 0.01;
+    transform: translateY(20px);
+  }
+  
+  .message-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 500ms;
+  }
+  
+  .message-transition-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .message-transition-exit-active {
+    opacity: 0.01;
+    transform: translateY(-20px);
+    transition: all 500ms;
+  }
+  
