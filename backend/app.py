@@ -17,7 +17,7 @@ from langchain.vectorstores import FAISS, VectorStore
 from llama_index import download_loader
 from llama_index import SimpleDirectoryReader
 
-openai.api_key = "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"
+openai.api_key = "xxx"
 docsearch = None
 history = []
 
